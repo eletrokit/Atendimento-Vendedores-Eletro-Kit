@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0d2f57" />
+  <title>Fale com a Eletro Kit</title>
+  <style>
+    :root {
+      --blue: #0d2f57;
+      --blue-2: #163f70;
+      --yellow: #ffd21f;
+      --bg: #f6f8fb;
+      --text: #18212b;
+      --muted: #667085;
+      --card: #ffffff;
+      --border: #e7ebf0;
+      --whatsapp: #25D366;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      background:
+        radial-gradient(circle at top, rgba(255,210,31,.18), transparent 32%),
+        var(--bg);
+      color: var(--text);
+      display: flex;
+      justify-content: center;
+      padding: 28px 16px;
+    }
+
+    .wrap {
+      width: 100%;
+      max-width: 520px;
+    }
+
+    .brand {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .brand-mark {
+      width: 78px;
+      height: 78px;
+      margin: 0 auto 14px;
+      border-radius: 22px;
+      display: grid;
+      place-items: center;
+      background: var(--blue);
+      color: var(--yellow);
+      font-weight: 900;
+      font-size: 29px;
+      letter-spacing: -1px;
+      box-shadow: 0 14px 30px rgba(13,47,87,.18);
+    }
+
+    h1 {
+      margin: 0;
+      color: var(--blue);
+      font-size: 29px;
+      line-height: 1.08;
+    }
+
+    .subtitle {
+      margin: 9px 0 0;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.45;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 20px;
+      box-shadow: 0 18px 50px rgba(30, 45, 62, .08);
+    }
+
+    .question {
+      font-size: 16px;
+      font-weight: 700;
+      margin: 2px 0 14px;
+      text-align: center;
+    }
+
+    .choice {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      border: 1px solid var(--border);
+      background: #fff;
+      border-radius: 18px;
+      padding: 15px;
+      margin-top: 11px;
+      text-decoration: none;
+      color: inherit;
+      cursor: pointer;
+      transition: transform .12s ease, border-color .12s ease, box-shadow .12s ease;
+      text-align: left;
+    }
+
+    .choice:hover {
+      transform: translateY(-1px);
+      border-color: #cfd7e2;
+      box-shadow: 0 8px 20px rgba(13,47,87,.07);
+    }
+
+    .choice.primary {
+      background: var(--blue);
+      color: white;
+      border-color: var(--blue);
+      padding: 17px 15px;
+    }
+
+    .choice.primary .desc {
+      color: rgba(255,255,255,.78);
+    }
+
+    .icon {
+      min-width: 46px;
+      width: 46px;
+      height: 46px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      background: #f0f4f8;
+      font-size: 22px;
+    }
+
+    .primary .icon {
+      background: var(--yellow);
+      color: var(--blue);
+    }
+
+    .copy {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .name {
+      font-size: 16px;
+      font-weight: 800;
+      line-height: 1.2;
+    }
+
+    .desc {
+      margin-top: 4px;
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.35;
+    }
+
+    .arrow {
+      font-size: 22px;
+      opacity: .58;
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #98a2b3;
+      font-size: 12px;
+      margin: 18px 0 8px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      font-weight: 700;
+    }
+
+    .divider::before, .divider::after {
+      content: "";
+      height: 1px;
+      background: var(--border);
+      flex: 1;
+    }
+
+    .footer {
+      text-align: center;
+      font-size: 12px;
+      color: #98a2b3;
+      margin-top: 18px;
+    }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 24px;
+      transform: translateX(-50%);
+      background: #101828;
+      color: white;
+      padding: 11px 14px;
+      border-radius: 12px;
+      font-size: 13px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .2s ease;
+      max-width: calc(100% - 32px);
+      text-align: center;
+    }
+
+    .toast.show {
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <section class="brand">
+      <div class="brand-mark">EK</div>
+      <h1>Fale com a Eletro Kit</h1>
+      <p class="subtitle">Estamos prontos para te atender 💙💛</p>
+    </section>
+
+    <section class="card">
+      <div class="question">Como você prefere ser atendido?</div>
+
+      <button class="choice primary" id="autoSeller" type="button">
+        <div class="icon">💬</div>
+        <div class="copy">
+          <div class="name">Falar com um vendedor</div>
+          <div class="desc">Escolhemos alguém da nossa equipe para te atender.</div>
+        </div>
+        <div class="arrow">›</div>
+      </button>
+
+      <div class="divider">ou escolha quem vai te atender</div>
+
+      <a class="choice" href="#" data-seller="simone">
+        <div class="icon">👩</div>
+        <div class="copy">
+          <div class="name">Simone</div>
+          <div class="desc">Falar diretamente com a Simone</div>
+        </div>
+        <div class="arrow">›</div>
+      </a>
+
+      <a class="choice" href="#" data-seller="leticia">
+        <div class="icon">👩</div>
+        <div class="copy">
+          <div class="name">Letícia</div>
+          <div class="desc">Falar diretamente com a Letícia</div>
+        </div>
+        <div class="arrow">›</div>
+      </a>
+
+      <a class="choice" href="#" data-seller="cloves">
+        <div class="icon">👨</div>
+        <div class="copy">
+          <div class="name">Cloves</div>
+          <div class="desc">Falar diretamente com o Cloves</div>
+        </div>
+        <div class="arrow">›</div>
+      </a>
+    </section>
+
+    <div class="footer">Atendimento via WhatsApp</div>
+  </main>
+
+  <div class="toast" id="toast">Abrindo o WhatsApp…</div>
+
+  <script>
+    const sellers = {
+      simone: { name: "Simone", phone: "5527998080133" },
+      leticia: { name: "Letícia", phone: "5527999632509" },
+      cloves: { name: "Cloves", phone: "5527999665333" }
+    };
+
+    const message = "Oi! 😊 Vi um produto no Story da Eletro Kit e tenho interesse. Pode me passar mais informações?";
+
+    function whatsappUrl(phone) {
+      return `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+    }
+
+    function openSeller(key) {
+      const seller = sellers[key];
+      if (!seller) return;
+      showToast(`Abrindo atendimento com ${seller.name}…`);
+      setTimeout(() => {
+        window.location.href = whatsappUrl(seller.phone);
+      }, 180);
+    }
+
+    function showToast(text) {
+      const toast = document.getElementById("toast");
+      toast.textContent = text;
+      toast.classList.add("show");
+      setTimeout(() => toast.classList.remove("show"), 1300);
+    }
+
+    // Distribuição gratuita nesta versão:
+    // escolhe aleatoriamente entre os 3 vendedores.
+    document.getElementById("autoSeller").addEventListener("click", () => {
+      const keys = Object.keys(sellers);
+      const chosen = keys[Math.floor(Math.random() * keys.length)];
+      openSeller(chosen);
+    });
+
+    document.querySelectorAll("[data-seller]").forEach((el) => {
+      el.addEventListener("click", (event) => {
+        event.preventDefault();
+        openSeller(el.dataset.seller);
+      });
+    });
+  </script>
+</body>
+</html>
