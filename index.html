@@ -258,6 +258,15 @@
         </div>
         <div class="arrow">›</div>
       </a>
+
+      <a class="choice" href="#" data-seller="santaMaria">
+        <div class="icon">🏬</div>
+        <div class="copy">
+          <div class="name">Loja de Santa Maria</div>
+          <div class="desc">Falar com a equipe da nossa unidade de Santa Maria</div>
+        </div>
+        <div class="arrow">›</div>
+      </a>
     </section>
 
     <div class="footer">Atendimento via WhatsApp</div>
@@ -269,7 +278,8 @@
     const sellers = {
       simone: { name: "Simone", phone: "5527998080133" },
       leticia: { name: "Letícia", phone: "5527999632509" },
-      cloves: { name: "Cloves", phone: "5527999665333" }
+      cloves: { name: "Cloves", phone: "5527999665333" },
+      santaMaria: { name: "Loja de Santa Maria", phone: "5527997941703" }
     };
 
     const message = "Oi! 😊 Vi um produto no Story da Eletro Kit e tenho interesse. Pode me passar mais informações?";
@@ -297,8 +307,8 @@
     // Distribuição gratuita nesta versão:
     // escolhe aleatoriamente entre os 3 vendedores.
     document.getElementById("autoSeller").addEventListener("click", () => {
-      const keys = Object.keys(sellers);
-      const chosen = keys[Math.floor(Math.random() * keys.length)];
+      const automaticSellers = ["simone", "leticia", "cloves"];
+      const chosen = automaticSellers[Math.floor(Math.random() * automaticSellers.length)];
       openSeller(chosen);
     });
 
