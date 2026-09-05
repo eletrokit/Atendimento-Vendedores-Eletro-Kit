@@ -282,18 +282,56 @@
       santaMaria: { name: "Loja de Santa Maria", phone: "5527997941703" }
     };
 
-    const message = "Oi! 😊 Vi um produto no Story da Eletro Kit e tenho interesse. Pode me passar mais informações?";
+    const DEFAULT_MESSAGE = "Oi! 😊 Vim pelo Instagram da Eletro Kit e gostaria de falar com um vendedor.";
+    const STICKY_HOURS = 72;
+    const STICKY_KEY = "eletrokit_auto_seller";
+    const automaticSellers = ["simone", "leticia", "cloves"];
 
-    function whatsappUrl(phone) {
+    const params = new URLSearchParams(window.location.search);
+    const offer = (params.get("oferta") || "").trim().slice(0, 180);
+
+    function offerMessage() {
+      return `Oi! Vim pelo Grupo VIP Eletro Kit e tenho interesse na oferta: ${offer}.`;
+    }
+
+    function whatsappUrl(phone, message = DEFAULT_MESSAGE) {
       return `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
     }
 
-    function openSeller(key) {
+    function getStickySeller() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(STICKY_KEY));
+        if (!saved || !automaticSellers.includes(saved.seller) || Date.now() >= saved.expiresAt) {
+          localStorage.removeItem(STICKY_KEY);
+          return null;
+        }
+        return saved.seller;
+      } catch {
+        localStorage.removeItem(STICKY_KEY);
+        return null;
+      }
+    }
+
+    function chooseAutomaticSeller() {
+      const saved = getStickySeller();
+      if (saved) return saved;
+
+      const chosen = automaticSellers[Math.floor(Math.random() * automaticSellers.length)];
+      try {
+        localStorage.setItem(STICKY_KEY, JSON.stringify({
+          seller: chosen,
+          expiresAt: Date.now() + STICKY_HOURS * 60 * 60 * 1000
+        }));
+      } catch {}
+      return chosen;
+    }
+
+    function openSeller(key, message = DEFAULT_MESSAGE) {
       const seller = sellers[key];
       if (!seller) return;
       showToast(`Abrindo atendimento com ${seller.name}…`);
       setTimeout(() => {
-        window.location.href = whatsappUrl(seller.phone);
+        window.location.href = whatsappUrl(seller.phone, message);
       }, 180);
     }
 
@@ -304,12 +342,10 @@
       setTimeout(() => toast.classList.remove("show"), 1300);
     }
 
-    // Distribuição gratuita nesta versão:
-    // escolhe aleatoriamente entre os 3 vendedores.
+    // Atendimento automático: mantém o mesmo vendedor por 72 horas
+    // neste navegador/dispositivo.
     document.getElementById("autoSeller").addEventListener("click", () => {
-      const automaticSellers = ["simone", "leticia", "cloves"];
-      const chosen = automaticSellers[Math.floor(Math.random() * automaticSellers.length)];
-      openSeller(chosen);
+      openSeller(chooseAutomaticSeller());
     });
 
     document.querySelectorAll("[data-seller]").forEach((el) => {
@@ -318,6 +354,13 @@
         openSeller(el.dataset.seller);
       });
     });
+
+    // Links de ofertas do Grupo VIP usam ?oferta=... e vão direto
+    // para o vendedor automático, respeitando a fidelização de 72 horas.
+    if (offer) {
+      document.body.style.visibility = "hidden";
+      window.location.replace(whatsappUrl(sellers[chooseAutomaticSeller()].phone, offerMessage()));
+    }
   </script>
 </body>
 </html>
